@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>New Post</h1>
+    <a href='/blogs'>View All Blogs</a>
+    <a href='/'>View All Users</a>
+    <br>
+    <br>
+    <br>
+    <form method="POST" action="/newpost">
+    <div>
+        <label>
+            Blog Title:
+            <input type="text" name='name' title="name"/>
+        </label>
+    </div>
+    <br>
+    <br>
+    <div>
+        <label type="text" name="body" title="Body">Body
+            <textarea type="text" name="body"></textarea>
+            <input type="submit" value='Add Blog' />
+        </label>
+    </div>
+    </form>
+{% endblock %}

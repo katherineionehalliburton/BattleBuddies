@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<a href='/blogs'>View All Blogs</a>
+<a href='/'>View All Users</a>
+<a href='/newpost'>Make New Post</a>
+<h1>{{blogs.name}}</h1>
+<p>{{blogs.body}}</p>
+{% endblock %}
