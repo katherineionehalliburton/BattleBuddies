@@ -24,23 +24,25 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
-    fullname = db.Column(db.String(100))
+    firstname = db.Column(db.String(100))
+    lastname = db.Column(db.String(100))
     username = db.Column(db.String(100), unique=True)    
     password = db.Column(db.String(100))
     branch = db.Column(db.String(100))
-    timeframe = db.Column(db.List())
-    country = db.Column(db.())
-    matches = db.Column(db.())
-    connections = db.Column(db.())
+    timeframe = db.Column(db.Integer())
+    country = db.Column(db.String(100))
+    matches = db.Column(db.String(100))
+    connections = db.Column(db.String(100))
     phone = db.Column(db.Integer, primary_key=True)
     facebook = db.Column(db.String(100))
     linkedin = db.Column(db.String(100))
-    userimage = db.Column(db.())
+    userimage = db.Column(db.String(100))
 
 
     def __init__(self, email, password):
         self.email = email
-        self.fullname = fullname
+        self.firstname = firstname
+        self.lastname = lastname
         self.username = username
         self.password = password
         self.branch = branch
@@ -83,9 +85,19 @@ def register():
     error = False
     email = ''
     if request.method == 'POST':
-        email = request.form['email']
+        username = request.form['username']
         password = request.form['password']
         verify = request.form['verify']
+        email = request.form['email']
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        phone = request.form['phone']
+        linkedin = request.form['linkedin']
+        facebook = request.form['facebook']
+        branch = request.form['branch']
+        timeframe = request.form['timeframe']
+        country = request.form['country']
+        userimage = request.form['userimage']
 
         
         existing_user = User.query.filter_by(email=email).first()
@@ -93,16 +105,31 @@ def register():
         if existing_user:            
             flash("User already exists")
         if not existing_user:
-            if len(email) < 3 or len(email) > 20 or " " in email or email == "":
+            if len(username) < 6 or len(username) > 20 or " " in username or username == "":
                 error = True
-                flash("Your entry must be between 3 and 20 characters and contain no spaces. Required field.")
-            if len(password) < 3 or len(password) > 20 or " " in password or password == "":
+                flash("Your entry must be between 6 and 20 characters and contain no spaces. Required field.")
+            if len(password) < 6 or len(password) > 20 or " " in password or password == "":
                 error = True
-                flash("Your entry must be between 3 and 20 characters and contain no spaces. Required field.")
-            if len(verify) < 3 or len(verify) > 20 or " " in verify or verify == "":
+                flash("Your entry must be between 6 and 20 characters and contain no spaces. Required field.")
+            if len(verify) < 6 or len(verify) > 20 or " " in verify or verify == "":
                 error = True
-                flash("Your entry must be between 3 and 20 characters and contain no spaces. Required field.")
-            
+                flash("Your entry must be between 6 and 20 characters and contain no spaces. Required field.")
+            if " " in email or email == "":
+                error = True
+                flash("Your entry should contain no spaces. Required field.")
+
+            if lastname == "" or firstname == "":
+                error = True
+                flash("Required field.")
+            if " " in phone or phone == "":
+                error = True
+                flash("Your entry should contain no spaces. Required field.")
+            if " " in branch or branch == "":
+                error = True
+                flash("Your entry should contain no spaces. Required field.")
+            if timeframe == "" or country == "":
+                error = True
+                flash("Your entry chould contain no spaces. Required field.")
     
             if "." not in email: 
                 error = True
@@ -116,8 +143,11 @@ def register():
                 error = True
                 flash("Password and Verify Password fields must match.")
 
+            
+
             if not error:
-                new_user = User(email, password)
+                new_user = User(username, email, password, firstname, lastname, phone, linkedin, facebook, branch,
+                timeframe, country, userimage)
                 db.session.add(new_user)
                 db.session.commit()
                 session['email'] = email

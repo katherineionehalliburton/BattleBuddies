@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Register to create a blog!</h1>
+<h1>Register to start connecting!</h1>
 <a href="/login">Or Login</a>
 <form action="/register" method="post">
     <table>
+        <h3>Profile Information</h3>
         <tr>
-            <td><label for="email">Email</label></td>
+            <td><label for="username">Username</label></td>
             <td>
-                <input name="email" type="email" value="{{ email }}">
+                <input name="username" type="username">
             </td>
         </tr>
         <tr>
@@ -23,6 +24,61 @@
                 <input name="verify" type="password">
             </td>
         </tr>
+        <tr>
+            <td><label for="email">Email</label></td>
+            <td>
+                <input name="email" type="email" value="{{ email }}">
+            </td>
+        </tr>
+    </table>
+    <table>
+        <h3>Contact Information<h5>(This information will not be shown until both parties have agreed to connect)></h5></h3> 
+        <tr>
+            <td><label for="phone">Phone</label></td>
+            <td>
+                <input name="phone" type="phone">
+            </td>
+        </tr>
+         <tr>
+            <td><label for="linkedin">LinkedIn</label></td>
+            <td>
+                <input name="linkedin" type="linkedin">
+            </td>
+        </tr>
+         <tr>
+            <td><label for="facebook">Facebook</label></td>
+            <td>
+                <input name="facebook" type="facebook">
+            </td>
+        </tr>
+    </table>
+    <table>
+        <h3>Service Information<h5>(this information will only be used to help find people you serve with)</h5></h3>
+         <tr>
+            <td><label for="branch">Branch</label></td>
+            <td>
+                <input name="branch" type="branch">
+            </td>
+        </tr>
+         <tr>
+            <td><label for="timeframe">Time Frame</label></td>
+            <td>
+                <input name="timeframe" type="timeframe">
+            </td>
+        </tr>
+         <tr>
+            <td><label for="country">Countries</label></td>
+            <td>
+                <input name="country" type="country">
+            </td>
+        </tr>
+        <tr>
+            <td><label for="userimage">Service Image</label></td>
+            <td>
+                <input name="userimage" type="userimage">
+            </td>
+        </tr>
+
     </table>
     <input type="submit" value="Register">
 </form>
