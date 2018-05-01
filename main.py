@@ -29,11 +29,11 @@ class User(db.Model):
     username = db.Column(db.String(100), unique=True)    
     password = db.Column(db.String(100))
     branch = db.Column(db.String(100))
-    timeframe = db.Column(db.Integer())
-    country = db.Column(db.String(100))
+    timeframe = db.Column(db.Integer)
+    base = db.Column(db.String(100))
     matches = db.Column(db.String(100))
     connections = db.Column(db.String(100))
-    phone = db.Column(db.Integer, primary_key=True)
+    phone = db.Column(db.Integer)
     facebook = db.Column(db.String(100))
     linkedin = db.Column(db.String(100))
     userimage = db.Column(db.String(100))
@@ -47,7 +47,7 @@ class User(db.Model):
         self.password = password
         self.branch = branch
         self.timeframe = timeframe
-        self.country = country
+        self.base = base
         self.matches = matches
         self.connections = connections
         self.phone = phone
@@ -96,7 +96,7 @@ def register():
         facebook = request.form['facebook']
         branch = request.form['branch']
         timeframe = request.form['timeframe']
-        country = request.form['country']
+        base = request.form['base']
         userimage = request.form['userimage']
 
         
@@ -127,9 +127,9 @@ def register():
             if " " in branch or branch == "":
                 error = True
                 flash("Your entry should contain no spaces. Required field.")
-            if timeframe == "" or country == "":
+            if timeframe == "" or base == "":
                 error = True
-                flash("Your entry chould contain no spaces. Required field.")
+                flash("Your entry should contain no spaces. Required field.")
     
             if "." not in email: 
                 error = True
@@ -147,7 +147,7 @@ def register():
 
             if not error:
                 new_user = User(username, email, password, firstname, lastname, phone, linkedin, facebook, branch,
-                timeframe, country, userimage)
+                timeframe, base, userimage)
                 db.session.add(new_user)
                 db.session.commit()
                 session['email'] = email
@@ -162,12 +162,6 @@ def logout():
     del session['email']
     return redirect('/login')
 
-@app.route('/')
-def index():
-    users = User.query.all()
-    return render_template('index.html',title="All Users", 
-        users=users)
-
 @app.route('/blogs')
 def blogs():   
     blogid = request.args.get('id')
@@ -178,7 +172,7 @@ def blogs():
     if blogid:
         blogid = int(blogid)
         blogs = Blog.query.get(blogid)
-        return render_template('ind_post.html', blogs=blogs)
+        return render_template('blogs.html', blogs=blogs)
     blogs = Blog.query.all()
     return render_template('blogs.html',title="Blogs", 
         blogs=blogs)

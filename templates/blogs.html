@@ -1,14 +1,40 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>All Blogs</h1>
-    <a href='/newpost'>Make New Post</a>
-    <a href='/'>View All Users</a>
+    <a href='/newpost'>View Profile</a>
 
+    <h3>In this section you can view those with whom you may have been stationed with in the past.</h3>
+    <h3>In order to share contact info with one another you must click on the "Yes" button next to their name!</h3>
+    <h1>Your Matches</h1>
     <hr />
 
         {% if blogs|length == 0 %}
-        <p>No blogs yet</p>
+        <p>No Matches Yet</p>
+        {% else %}
+
+            <ul>
+                {% for blog in blogs %}
+                <li>
+                    <a href="/blogs?id={{blog.id}}">{{blog.name}}</a>
+                    <h6><p>Written By: 
+                        <br> 
+                        <a href="/blog?id={{blog.owner.id}}"></a>{{blog.owner.email}}</p></h6>
+                </li>
+                {% endfor %}
+
+        {% endif %}
+
+    <hr />
+<h3>**************************************************************************************************</h3>
+
+<h4>In this section you can view those with whom you have mutually clicked "Yes"!</h4>
+
+
+<hr />
+<h1>Your Connections</h1>
+
+        {% if blogs|length == 0 %}
+        <p>No Connections Yet</p>
         {% else %}
 
             <ul>
