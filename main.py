@@ -23,13 +23,14 @@ app.secret_key = '7h1sh@sb33n7h3h@rd3s7p@r7'
 class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100), unique=True)
+    email = db.Column(db.String(100),)
     firstname = db.Column(db.String(100))
     lastname = db.Column(db.String(100))
     username = db.Column(db.String(100), unique=True)    
     password = db.Column(db.String(100))
     branch = db.Column(db.String(100))
-    timeframe = db.Column(db.Integer)
+    entrydate = db.Column(db.Integer)    
+    exitdate = db.Column(db.Integer)
     base = db.Column(db.String(100))
     matches = db.Column(db.String(100))
     connections = db.Column(db.String(100))
@@ -46,7 +47,8 @@ class User(db.Model):
         self.username = username
         self.password = password
         self.branch = branch
-        self.timeframe = timeframe
+        self.entrydate = entrydate        
+        self.exitdate = exitdate
         self.base = base
         self.matches = matches
         self.connections = connections
@@ -60,18 +62,18 @@ class User(db.Model):
 @app.before_request
 def require_login():
     allowed_routes = ['login', 'register','index', 'blogs']
-    if request.endpoint not in allowed_routes and 'email' not in session:
+    if request.endpoint not in allowed_routes and 'username' not in session:
         flash("You must log in!")
         return redirect('/login')
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
+        username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(username=username).first()
         if user and user.password == password:
-            session['email'] = email
+            session['username'] = username
             flash("Logged in")
             return redirect('/newpost')
         else:
@@ -95,7 +97,8 @@ def register():
         linkedin = request.form['linkedin']
         facebook = request.form['facebook']
         branch = request.form['branch']
-        timeframe = request.form['timeframe']
+        entrydate = request.form['entrydate']        
+        exitdate = request.form['exitdate']
         base = request.form['base']
         userimage = request.form['userimage']
 
@@ -127,7 +130,7 @@ def register():
             if " " in branch or branch == "":
                 error = True
                 flash("Your entry should contain no spaces. Required field.")
-            if timeframe == "" or base == "":
+            if entrydate == "" or exitdate =="" or base == "":
                 error = True
                 flash("Your entry should contain no spaces. Required field.")
     
