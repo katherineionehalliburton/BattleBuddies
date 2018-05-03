@@ -28,31 +28,31 @@ class User(db.Model):
     lastname = db.Column(db.String(100))
     username = db.Column(db.String(100))   
     password = db.Column(db.String(100))
+    phone = db.Column(db.Integer)
     '''branch = db.Column(db.String(100))
     entrydate = db.Column(db.Integer)    
     exitdate = db.Column(db.Integer)
     base = db.Column(db.String(100))
     matches = db.Column(db.String(100))
     connections = db.Column(db.String(100))
-    phone = db.Column(db.Integer)
     facebook = db.Column(db.String(100))
     linkedin = db.Column(db.String(100))
     userimage = db.Column(db.String(100))'''
 
 
-    def __init__(self, email, password, username, firstname, lastname):
+    def __init__(self, email, password, username, firstname, lastname, phone):
         self.email = email
         self.username = username
         self.password = password
         self.firstname = firstname
         self.lastname = lastname
+        self.phone = phone
         '''self.branch = branch
         self.entrydate = entrydate        
         self.exitdate = exitdate
         self.base = base
         self.matches = matches
         self.connections = connections
-        self.phone = phone
         self.facebook = facebook
         self.linkedin = linkedin
         self.userimage = userimage'''
@@ -93,8 +93,8 @@ def register():
         email = request.form['email']
         firstname = request.form['firstname']
         lastname = request.form['lastname']
-        '''phone = request.form['phone']
-        linkedin = request.form['linkedin']
+        phone = request.form['phone']
+        '''linkedin = request.form['linkedin']
         facebook = request.form['facebook']
         branch = request.form['branch']
         entrydate = request.form['entrydate']        
@@ -124,10 +124,10 @@ def register():
             if  lastname == "" or firstname == "":
                 error = True
                 flash("Required field.")
-            '''if " " in phone or phone == "":
+            if " " in phone or phone == "":
                 error = True
                 flash("Your entry should contain no spaces. Required field.")
-            if " " in branch or branch == "":
+            '''if " " in branch or branch == "":
                 error = True
                 flash("Your entry should contain no spaces. Required field.")
             if entrydate == "" or exitdate =="" or base == "":
@@ -149,7 +149,7 @@ def register():
             
 
             if not error:
-                new_user = User(email, password, username, firstname, lastname)
+                new_user = User(email, password, username, firstname, lastname, phone)
                 db.session.add(new_user)
                 db.session.commit()
                 session['email'] = email
