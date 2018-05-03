@@ -8,7 +8,7 @@ app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 app.secret_key = '7h1sh@sb33n7h3h@rd3s7p@r7'
 
-'''class Blog(db.Model):            (Commented out for visibility - will rework for matches page)
+class Blog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
@@ -18,17 +18,17 @@ app.secret_key = '7h1sh@sb33n7h3h@rd3s7p@r7'
     def __init__(self, name, body, owner):
         self.name = name
         self.body = body
-        self.owner = owner'''
+        self.owner = owner
 
 class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100),)
-    firstname = db.Column(db.String(100))
-    lastname = db.Column(db.String(100))
-    username = db.Column(db.String(100), unique=True)    
+    email = db.Column(db.String(100),unique=True)
+    '''firstname = db.Column(db.String(100))
+    lastname = db.Column(db.String(100))'''
+    username = db.Column(db.String(100))   
     password = db.Column(db.String(100))
-    branch = db.Column(db.String(100))
+    '''branch = db.Column(db.String(100))
     entrydate = db.Column(db.Integer)    
     exitdate = db.Column(db.Integer)
     base = db.Column(db.String(100))
@@ -37,16 +37,16 @@ class User(db.Model):
     phone = db.Column(db.Integer)
     facebook = db.Column(db.String(100))
     linkedin = db.Column(db.String(100))
-    userimage = db.Column(db.String(100))
+    userimage = db.Column(db.String(100))'''
 
 
     def __init__(self, email, password):
         self.email = email
-        self.firstname = firstname
-        self.lastname = lastname
+        '''self.firstname = firstname
+        self.lastname = lastname'''
         self.username = username
         self.password = password
-        self.branch = branch
+        '''self.branch = branch
         self.entrydate = entrydate        
         self.exitdate = exitdate
         self.base = base
@@ -55,25 +55,25 @@ class User(db.Model):
         self.phone = phone
         self.facebook = facebook
         self.linkedin = linkedin
-        self.userimage = userimage
+        self.userimage = userimage'''
 
         
 
 @app.before_request
 def require_login():
     allowed_routes = ['login', 'register','index', 'blogs']
-    if request.endpoint not in allowed_routes and 'username' not in session:
+    if request.endpoint not in allowed_routes and 'email' not in session:
         flash("You must log in!")
         return redirect('/login')
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(email=email).first()
         if user and user.password == password:
-            session['username'] = username
+            session['email'] = email
             flash("Logged in")
             return redirect('/newpost')
         else:
@@ -91,7 +91,7 @@ def register():
         password = request.form['password']
         verify = request.form['verify']
         email = request.form['email']
-        firstname = request.form['firstname']
+        '''firstname = request.form['firstname']
         lastname = request.form['lastname']
         phone = request.form['phone']
         linkedin = request.form['linkedin']
@@ -100,7 +100,7 @@ def register():
         entrydate = request.form['entrydate']        
         exitdate = request.form['exitdate']
         base = request.form['base']
-        userimage = request.form['userimage']
+        userimage = request.form['userimage']'''
 
         
         existing_user = User.query.filter_by(email=email).first()
@@ -121,7 +121,7 @@ def register():
                 error = True
                 flash("Your entry should contain no spaces. Required field.")
 
-            if lastname == "" or firstname == "":
+            '''if lastname == "" or firstname == "":
                 error = True
                 flash("Required field.")
             if " " in phone or phone == "":
@@ -132,15 +132,15 @@ def register():
                 flash("Your entry should contain no spaces. Required field.")
             if entrydate == "" or exitdate =="" or base == "":
                 error = True
-                flash("Your entry should contain no spaces. Required field.")
+                flash("Your entry should contain no spaces. Required field.")'''
     
             if "." not in email: 
                 error = True
-                flash("Not a valid email.")
+                flash("Not a valid email. Must contain a ''.'' ")
             
             if "@" not in email:
                 error = True
-                flash("Not a valid email.")
+                flash("Not a valid email. Must contain a '@' ")
 
             if password != verify:
                 error = True
@@ -149,8 +149,7 @@ def register():
             
 
             if not error:
-                new_user = User(username, email, password, firstname, lastname, phone, linkedin, facebook, branch,
-                timeframe, base, userimage)
+                new_user = User(email, password, username)
                 db.session.add(new_user)
                 db.session.commit()
                 session['email'] = email

@@ -13,6 +13,12 @@
             </td>
         </tr>
         <tr>
+                <td><label for="email">*Email</label></td>
+                <td>
+                    <input name="email" type="email" value="{{ email }}">
+                </td>
+            </tr>
+        <tr>
             <td><label for="password">*Password</label></td>
             <td>
                 <input name="password" type="password">
@@ -26,18 +32,12 @@
         </tr>
         
     </table>
-    <table>
+    <!--<table>
         <h3>Contact Information<h5>(This information will not be shown until both parties have agreed to connect)</h5></h3> 
         <tr>
             <td><label for="phone"> Phone</label></td>
             <td>
                 <input name="phone" type="phone">
-            </td>
-        </tr>
-        <tr>
-            <td><label for="email">*Email</label></td>
-            <td>
-                <input name="email" type="email" value="{{ email }}">
             </td>
         </tr>
          <tr>
@@ -86,7 +86,7 @@
             </td>
         </tr>
 
-    </table>
+    </table>-->
     <input type="submit" value="Register">
 </form>
 {% endblock %}
