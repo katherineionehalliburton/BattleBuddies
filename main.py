@@ -24,8 +24,8 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100),unique=True)
-    '''firstname = db.Column(db.String(100))
-    lastname = db.Column(db.String(100))'''
+    firstname = db.Column(db.String(100))
+    lastname = db.Column(db.String(100))
     username = db.Column(db.String(100))   
     password = db.Column(db.String(100))
     '''branch = db.Column(db.String(100))
@@ -40,12 +40,12 @@ class User(db.Model):
     userimage = db.Column(db.String(100))'''
 
 
-    def __init__(self, email, password):
+    def __init__(self, email, password, username, firstname, lastname):
         self.email = email
-        '''self.firstname = firstname
-        self.lastname = lastname'''
         self.username = username
         self.password = password
+        self.firstname = firstname
+        self.lastname = lastname
         '''self.branch = branch
         self.entrydate = entrydate        
         self.exitdate = exitdate
@@ -91,9 +91,9 @@ def register():
         password = request.form['password']
         verify = request.form['verify']
         email = request.form['email']
-        '''firstname = request.form['firstname']
+        firstname = request.form['firstname']
         lastname = request.form['lastname']
-        phone = request.form['phone']
+        '''phone = request.form['phone']
         linkedin = request.form['linkedin']
         facebook = request.form['facebook']
         branch = request.form['branch']
@@ -121,10 +121,10 @@ def register():
                 error = True
                 flash("Your entry should contain no spaces. Required field.")
 
-            '''if lastname == "" or firstname == "":
+            if  lastname == "" or firstname == "":
                 error = True
                 flash("Required field.")
-            if " " in phone or phone == "":
+            '''if " " in phone or phone == "":
                 error = True
                 flash("Your entry should contain no spaces. Required field.")
             if " " in branch or branch == "":
@@ -149,7 +149,7 @@ def register():
             
 
             if not error:
-                new_user = User(email, password, username)
+                new_user = User(email, password, username, firstname, lastname)
                 db.session.add(new_user)
                 db.session.commit()
                 session['email'] = email
