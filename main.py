@@ -36,14 +36,11 @@ class User(db.Model):
     entrydate = db.Column(db.Integer)    
     exitdate = db.Column(db.Integer)
     userimage = db.Column(db.String(100))
-    '''
-    
     matches = db.Column(db.String(100))
     connections = db.Column(db.String(100))
-    '''
 
 
-    def __init__(self, email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base, entrydate, exitdate, userimage):
+    def __init__(self, email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base, entrydate, exitdate, userimage, matches, connections):
         self.email = email
         self.username = username
         self.password = password
@@ -57,11 +54,8 @@ class User(db.Model):
         self.entrydate = entrydate        
         self.exitdate = exitdate
         self.userimage = userimage
-        
-        
-        '''        
         self.matches = matches
-        self.connections = connections'''
+        self.connections = connections
 
         
 
