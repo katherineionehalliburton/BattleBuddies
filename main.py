@@ -35,14 +35,15 @@ class User(db.Model):
     base = db.Column(db.String(100))
     entrydate = db.Column(db.Integer)    
     exitdate = db.Column(db.Integer)
+    userimage = db.Column(db.String(100))
     '''
     
     matches = db.Column(db.String(100))
     connections = db.Column(db.String(100))
-    userimage = db.Column(db.String(100))'''
+    '''
 
 
-    def __init__(self, email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base, entrydate, exitdate):
+    def __init__(self, email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base, entrydate, exitdate, userimage):
         self.email = email
         self.username = username
         self.password = password
@@ -55,11 +56,12 @@ class User(db.Model):
         self.base = base
         self.entrydate = entrydate        
         self.exitdate = exitdate
+        self.userimage = userimage
+        
         
         '''        
         self.matches = matches
-        self.connections = connections
-        self.userimage = userimage'''
+        self.connections = connections'''
 
         
 
@@ -104,8 +106,7 @@ def register():
         linkedin = request.form['linkedin'] 
         entrydate = request.form['entrydate']        
         exitdate = request.form['exitdate']       
-        '''
-        userimage = request.form['userimage']'''
+        userimage = request.form['userimage']
 
         
         existing_user = User.query.filter_by(email=email).first()
@@ -157,7 +158,7 @@ def register():
             
 
             if not error:
-                new_user = User(email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base, entrydate, exitdate)
+                new_user = User(email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base, entrydate, exitdate, userimage)
                 db.session.add(new_user)
                 db.session.commit()
                 session['email'] = email
