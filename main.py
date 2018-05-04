@@ -30,9 +30,10 @@ class User(db.Model):
     password = db.Column(db.String(100))
     phone = db.Column(db.Integer)
     facebook = db.Column(db.String(100))
+    linkedin = db.Column(db.String(100))
     branch = db.Column(db.String(100))
     base = db.Column(db.String(100))
-    '''linkedin = db.Column(db.String(100))
+    '''
     entrydate = db.Column(db.Integer)    
     exitdate = db.Column(db.Integer)
     matches = db.Column(db.String(100))
@@ -40,7 +41,7 @@ class User(db.Model):
     userimage = db.Column(db.String(100))'''
 
 
-    def __init__(self, email, password, username, firstname, lastname, phone, facebook, branch, base):
+    def __init__(self, email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base):
         self.email = email
         self.username = username
         self.password = password
@@ -48,12 +49,12 @@ class User(db.Model):
         self.lastname = lastname
         self.phone = phone
         self.facebook = facebook
+        self.linkedin = linkedin
         self.branch = branch
         self.base = base
         
         '''self.entrydate = entrydate        
         self.exitdate = exitdate        
-        self.linkedin = linkedin
         self.matches = matches
         self.connections = connections
         self.userimage = userimage'''
@@ -98,8 +99,8 @@ def register():
         facebook = request.form['facebook']
         branch = request.form['branch']
         base = request.form['base']
-        '''linkedin = request.form['linkedin']        
-        entrydate = request.form['entrydate']        
+        linkedin = request.form['linkedin']        
+        '''entrydate = request.form['entrydate']        
         exitdate = request.form['exitdate']
         userimage = request.form['userimage']'''
 
@@ -153,7 +154,7 @@ def register():
             
 
             if not error:
-                new_user = User(email, password, username, firstname, lastname, phone, facebook, branch, base)
+                new_user = User(email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base)
                 db.session.add(new_user)
                 db.session.commit()
                 session['email'] = email
