@@ -33,15 +33,16 @@ class User(db.Model):
     linkedin = db.Column(db.String(100))
     branch = db.Column(db.String(100))
     base = db.Column(db.String(100))
-    '''
     entrydate = db.Column(db.Integer)    
     exitdate = db.Column(db.Integer)
+    '''
+    
     matches = db.Column(db.String(100))
     connections = db.Column(db.String(100))
     userimage = db.Column(db.String(100))'''
 
 
-    def __init__(self, email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base):
+    def __init__(self, email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base, entrydate, exitdate):
         self.email = email
         self.username = username
         self.password = password
@@ -52,9 +53,10 @@ class User(db.Model):
         self.linkedin = linkedin
         self.branch = branch
         self.base = base
+        self.entrydate = entrydate        
+        self.exitdate = exitdate
         
-        '''self.entrydate = entrydate        
-        self.exitdate = exitdate        
+        '''        
         self.matches = matches
         self.connections = connections
         self.userimage = userimage'''
@@ -99,9 +101,10 @@ def register():
         facebook = request.form['facebook']
         branch = request.form['branch']
         base = request.form['base']
-        linkedin = request.form['linkedin']        
-        '''entrydate = request.form['entrydate']        
-        exitdate = request.form['exitdate']
+        linkedin = request.form['linkedin'] 
+        entrydate = request.form['entrydate']        
+        exitdate = request.form['exitdate']       
+        '''
         userimage = request.form['userimage']'''
 
         
@@ -135,9 +138,9 @@ def register():
             if base == "":
                 error = True
                 flash("Base Assignment cannot be blank.")
-            '''if entrydate == "" or exitdate =="":
+            if entrydate == "" or exitdate =="":
                 error = True
-                flash("Your entry should contain no spaces. Required field.")'''
+                flash("Your entry should contain no spaces. Required field.")
     
             if "." not in email: 
                 error = True
@@ -154,7 +157,7 @@ def register():
             
 
             if not error:
-                new_user = User(email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base)
+                new_user = User(email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base, entrydate, exitdate)
                 db.session.add(new_user)
                 db.session.commit()
                 session['email'] = email
