@@ -11,7 +11,6 @@ app.secret_key = '7h1sh@sb33n7h3h@rd3s7p@r7'
 class Info(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     firstname = db.Column(db.String(100))
     lastname = db.Column(db.String(100))
     email = db.Column(db.String(100))
@@ -22,10 +21,10 @@ class Info(db.Model):
     branch = db.Column(db.String(100))
     base = db.Column(db.String(100))
     entrydate = db.Column(db.Integer)
-    exitdate = db.Column(db.Integer)   
+    exitdate = db.Column(db.Integer) 
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))  
 
-    def __init__(self, owner, firstname, lastname, email, phone, facebook, linkedin, userimage, branch, base, entrydate, exitdate):
-        self.owner = owner
+    def __init__(self, firstname, lastname, email, phone, facebook, linkedin, userimage, branch, base, entrydate, exitdate, owner):
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
@@ -36,7 +35,8 @@ class Info(db.Model):
         self.branch = branch
         self.base = base
         self.entrydate = entrydate   
-        self.exitdate = exitdate     
+        self.exitdate = exitdate  
+        self.owner = owner   
 
 class User(db.Model):
 
@@ -83,19 +83,7 @@ def register():
         username = request.form['username']
         password = request.form['password']
         verify = request.form['verify']
-        email = request.form['email']
-        firstname = request.form['firstname']
-        lastname = request.form['lastname']
-        phone = request.form['phone']
-        facebook = request.form['facebook']
-        branch = request.form['branch']
-        base = request.form['base']
-        linkedin = request.form['linkedin'] 
-        entrydate = request.form['entrydate']        
-        exitdate = request.form['exitdate']       
-        userimage = request.form['userimage']
-
-        
+                
         existing_user = User.query.filter_by(username=username).first()
         
         if existing_user:            
@@ -110,48 +98,17 @@ def register():
             if len(verify) < 6 or len(verify) > 20 or " " in verify or verify == "":
                 error = True
                 flash("Your entry must be between 6 and 20 characters and contain no spaces. Required field.")
-            if " " in email or email == "":
-                error = True
-                flash("Your entry should contain no spaces. Required field.")
-
-            if  lastname == "" or firstname == "":
-                error = True
-                flash("Required field.")
-            if " " in phone or phone == "":
-                error = True
-                flash("Your entry should contain no spaces. Required field.")
-            if " " in branch or branch == "":
-                error = True
-                flash("Your entry should contain no spaces. Required field.")
-            if base == "":
-                error = True
-                flash("Base Assignment cannot be blank.")
-            if entrydate == "":
-                error = True
-                flash("Your entry should contain no spaces. Required field.")
-    
-            if "." not in email: 
-                error = True
-                flash("Not a valid email. Must contain a ''.'' ")
-            
-            if "@" not in email:
-                error = True
-                flash("Not a valid email. Must contain a '@' ")
 
             if password != verify:
                 error = True
                 flash("Password and Verify Password fields must match.")
-
             
-
             if not error:
-                new_user = User(password, username)
-                info = Info(firstname, lastname, email, phone, facebook, linkedin, userimage, branch, base, entrydate, exitdate)
+                new_user = User(password,username)
                 db.session.add(new_user)
-                db.session.add(info)
                 db.session.commit()
                 session['username'] = username
-                return redirect('/matches')
+                return redirect('/profile')
                 
         return redirect('/register')
 
@@ -164,7 +121,7 @@ def logout():
 
 @app.route('/matches')
 def matches():   
-    infoid = request.args.get('id')
+    '''infoid = request.args.get('id')
     ownerid = request.args.get('owner_id')
     if ownerid:
         matches = Info.query.filter_by(ownerid=ownerid).all()
@@ -173,7 +130,7 @@ def matches():
         infoid = int(infoid)
         matches = Info.query.get(infoid)
         return render_template('matches.html', matches=matches)
-    matches = Info.query.all()
+    matches = Info.query.all()'''
     return render_template('matches.html',title="Matches", 
         matches=matches)
 
@@ -181,9 +138,6 @@ def matches():
 @app.route('/profile', methods=['POST', 'GET'])
 def profile():
     owner = User.query.filter_by(username=session['username']).first()
-    username = ""
-    password = ""
-    verify = ""
     email = ""
     firstname = ""
     lastname = ""
@@ -196,9 +150,6 @@ def profile():
     exitdate = ""   
     userimage = ""
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        verify = request.form['verify']
         email = request.form['email']
         firstname = request.form['firstname']
         lastname = request.form['lastname']
@@ -210,12 +161,53 @@ def profile():
         entrydate = request.form['entrydate']        
         exitdate = request.form['exitdate']     
         userimage = request.form['userimage']
+        error = False
+        if not email and not phone:
+            flash("Profile must have an email or phone for contact!", 'error')
+            error = True
+        if not firstname:
+            flash("First name required!", 'error')
+            error = True
+        if not lastname:
+            flash("Last name required!", 'error')
+            error = True
+        if not branch:
+            flash("Branch required!", 'error')
+            error = True
+        if not base:
+            flash("Base Assignment required!", 'error')
+            error = True
+        if not entrydate:
+            flash("Enlistment Date required!", 'error')
+            error = True
+        if not exitdate:
+            flash("Exit Date required!", 'error')
+            error = True
+        if not userimage:
+            flash("Service Image required!", 'error')
+            error = True
+        if " " in email or email == "":
+            error = True
+            flash("Your entry should contain no spaces. Required field.")
+    
+        if "." not in email: 
+            error = True
+            flash("Not a valid email. Must contain a ''.'' ")
+            
+        if "@" not in email:
+            error = True
+            flash("Not a valid email. Must contain a '@' ")
 
+            
+        if not error:
+            info = Info(firstname,lastname,email,phone,facebook,linkedin,userimage,branch,base,entrydate,exitdate,owner)
+            db.session.add(info)
+            db.session.commit()
+            return redirect('/matches?id={0}'.format(info.id))
 
-    user = User.query.filter_by(owner=owner).all()
     info = Info.query.filter_by(owner=owner).all()
     return render_template('profile.html',title="Profile", 
-        user=user, info=info)
+        info=info)
 
 if __name__ == '__main__':
     app.run()
