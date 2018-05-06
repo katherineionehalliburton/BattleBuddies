@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <a href='/matches'>View Your Matches</a>
+    <br>
+    <br>
+    <br>
+    <form method="POST" action="/profile">
+        <h1>Your Profile</h1>
+        <hr />
+    
+            <ul>
+                {% for a in user %}
+                <li>
+                    <a href="/a?id={{a.id}}">{{a.name}}</a>
+                    <h6><p>Written By: 
+                        <br> 
+                        <a href="/a?id={{a.owner.id}}"></a>{{a.owner.username}}</p></h6>
+                </li>
+                {% endfor %}
+    
+        <hr />    
+    </form>
+
+
+{% endblock %}

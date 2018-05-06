@@ -1,12 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <a href='/newpost'>View Profile</a>
+    <a href='/profile'>View Profile</a>
 
     <h3>In this section you can view those with whom you may have been stationed with in the past.</h3>
     <h3>In order to share contact info with one another you must click on the "Yes" button next to their name!</h3>
     <h1>Your Matches</h1>
-    <hr />
+    <!--
+        //TODO - if MilInfo.Branch.A == MilInfo.Branch.B and MilInfo.Base.A == MilInfo.Base.B 
+                    and MilInfo.entrydate/exitdate.A range contains MilInfo.entrydate/exitdate>B range
+
+                then show User.Name, User.Image, MilInfo.Base
+
+            Make buttons for selecting users to connect with.
+
+
+        <hr />
 
         {% if blogs|length == 0 %}
         <p>No Matches Yet</p>
@@ -18,7 +27,7 @@
                     <a href="/blogs?id={{blog.id}}">{{blog.name}}</a>
                     <h6><p>Written By: 
                         <br> 
-                        <a href="/blog?id={{blog.owner.id}}"></a>{{blog.owner.email}}</p></h6>
+                        <a href="/blog?id={{blog.owner.id}}"></a>{{blog.owner.username}}</p></h6>
                 </li>
                 {% endfor %}
 
@@ -26,6 +35,10 @@
 
     <hr />
 <h3>**************************************************************************************************</h3>
+
+//TODO - If user.id.a and user.id.b both click yes button then show contact info here
+            user.name, user.email, user.phone, user.facebook, user.linkedin, user.image, MilInfo.Base
+
 
 <h4>In this section you can view those with whom you have mutually clicked "Yes"!</h4>
 
@@ -43,11 +56,11 @@
                     <a href="/blogs?id={{blog.id}}">{{blog.name}}</a>
                     <h6><p>Written By: 
                         <br> 
-                        <a href="/blog?id={{blog.owner.id}}"></a>{{blog.owner.email}}</p></h6>
+                        <a href="/blog?id={{blog.owner.id}}"></a>{{blog.owner.username}}</p></h6>
                 </li>
                 {% endfor %}
 
         {% endif %}
 
-    <hr />
+    <hr />-->
 {% endblock %}

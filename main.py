@@ -8,69 +8,67 @@ app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 app.secret_key = '7h1sh@sb33n7h3h@rd3s7p@r7'
 
-class Blog(db.Model):
+class Info(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120))
-    body = db.Column(db.String(120))
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    firstname = db.Column(db.String(100))
+    lastname = db.Column(db.String(100))
+    email = db.Column(db.String(100))
+    phone = db.Column(db.Integer)
+    facebook = db.Column(db.String(100))
+    linkedin = db.Column(db.String(100))
+    userimage = db.Column(db.String(100))
+    branch = db.Column(db.String(100))
+    base = db.Column(db.String(100))
+    entrydate = db.Column(db.Integer)
+    exitdate = db.Column(db.Integer)   
 
-    def __init__(self, name, body, owner):
-        self.name = name
-        self.body = body
+    def __init__(self, owner, firstname, lastname, email, phone, facebook, linkedin, userimage, branch, base, entrydate, exitdate):
         self.owner = owner
+        self.firstname = firstname
+        self.lastname = lastname
+        self.email = email
+        self.phone = phone
+        self.facebook = facebook
+        self.linkedin = linkedin
+        self.userimage = userimage
+        self.branch = branch
+        self.base = base
+        self.entrydate = entrydate   
+        self.exitdate = exitdate     
 
 class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100),unique=True)
-    firstname = db.Column(db.String(100))
-    lastname = db.Column(db.String(100))
-    username = db.Column(db.String(100))   
     password = db.Column(db.String(100))
-    phone = db.Column(db.Integer)
-    facebook = db.Column(db.String(100))
-    linkedin = db.Column(db.String(100))
-    branch = db.Column(db.String(100))
-    base = db.Column(db.String(100))
-    entrydate = db.Column(db.Integer)    
-    exitdate = db.Column(db.Integer)
-    userimage = db.Column(db.String(100))
+    username = db.Column(db.String(100), unique=True)     
+    info = db.relationship('Info', backref='owner')
 
 
-    def __init__(self, email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base, entrydate, exitdate, userimage):
-        self.email = email
+    def __init__(self, password, username):
         self.username = username
         self.password = password
-        self.firstname = firstname
-        self.lastname = lastname
-        self.phone = phone
-        self.facebook = facebook
-        self.linkedin = linkedin
-        self.branch = branch
-        self.base = base
-        self.entrydate = entrydate        
-        self.exitdate = exitdate
-        self.userimage = userimage
-                
+        
+
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'register','index', 'blogs']
-    if request.endpoint not in allowed_routes and 'email' not in session:
+    allowed_routes = ['login', 'register', 'index', 'matches', 'profile']
+    if request.endpoint not in allowed_routes and 'username' not in session:
         flash("You must log in!")
         return redirect('/login')
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
+        username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(username=username).first()
         if user and user.password == password:
-            session['email'] = email
+            session['username'] = username
             flash("Logged in")
-            return redirect('/newpost')
+            return redirect('/matches')
         else:
             flash('User/password incorrect or user does not exist', 'error')
 
@@ -80,7 +78,7 @@ def login():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     error = False
-    email = ''
+    username = ''
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -98,7 +96,7 @@ def register():
         userimage = request.form['userimage']
 
         
-        existing_user = User.query.filter_by(email=email).first()
+        existing_user = User.query.filter_by(username=username).first()
         
         if existing_user:            
             flash("User already exists")
@@ -128,7 +126,7 @@ def register():
             if base == "":
                 error = True
                 flash("Base Assignment cannot be blank.")
-            if entrydate == "" or exitdate =="":
+            if entrydate == "":
                 error = True
                 flash("Your entry should contain no spaces. Required field.")
     
@@ -147,11 +145,13 @@ def register():
             
 
             if not error:
-                new_user = User(email, password, username, firstname, lastname, phone, facebook, linkedin, branch, base, entrydate, exitdate, userimage)
+                new_user = User(password, username)
+                info = Info(firstname, lastname, email, phone, facebook, linkedin, userimage, branch, base, entrydate, exitdate)
                 db.session.add(new_user)
+                db.session.add(info)
                 db.session.commit()
-                session['email'] = email
-                return redirect('/blogs')
+                session['username'] = username
+                return redirect('/matches')
                 
         return redirect('/register')
 
@@ -159,48 +159,63 @@ def register():
 
 @app.route('/logout')
 def logout():
-    del session['email']
+    del session['username']
     return redirect('/login')
 
-@app.route('/blogs')
-def blogs():   
-    blogid = request.args.get('id')
+@app.route('/matches')
+def matches():   
+    infoid = request.args.get('id')
     ownerid = request.args.get('owner_id')
     if ownerid:
-        blogs = Blog.query.filter_by(ownerid=ownerid).all()
-        return render_template('blogs.html', title="Blogs", blogs=blogs)
-    if blogid:
-        blogid = int(blogid)
-        blogs = Blog.query.get(blogid)
-        return render_template('blogs.html', blogs=blogs)
-    blogs = Blog.query.all()
-    return render_template('blogs.html',title="Blogs", 
-        blogs=blogs)
+        matches = Info.query.filter_by(ownerid=ownerid).all()
+        return render_template('matches.html', title="Matches", matches=matches)
+    if infoid:
+        infoid = int(infoid)
+        matches = Info.query.get(infoid)
+        return render_template('matches.html', matches=matches)
+    matches = Info.query.all()
+    return render_template('matches.html',title="Matches", 
+        matches=matches)
 
 
-@app.route('/newpost', methods=['POST', 'GET'])
-def new_post():
-    owner = User.query.filter_by(email=session['email']).first()
-    name = ""
-    body = ""
+@app.route('/profile', methods=['POST', 'GET'])
+def profile():
+    owner = User.query.filter_by(username=session['username']).first()
+    username = ""
+    password = ""
+    verify = ""
+    email = ""
+    firstname = ""
+    lastname = ""
+    phone = ""
+    facebook = ""
+    branch = ""
+    base = ""
+    linkedin = "" 
+    entrydate = ""   
+    exitdate = ""   
+    userimage = ""
     if request.method == 'POST':
-        name = request.form['name']
-        body = request.form['body']
-        error = False
-        if not name:
-            flash("Blog must have a Title!", 'error')
-            error = True
-        if not body:
-            flash("Blog must have a Body!", 'error')
-            error = True
-        if not error:
-            blog = Blog(name,body,owner)
-            db.session.add(blog)
-            db.session.commit()
-            return redirect('/blogs?id={0}'.format(blog.id))
-    blogs = Blog.query.filter_by(owner=owner).all()
-    return render_template('newpost.html',title="New Post", 
-        blogs=blogs)
+        username = request.form['username']
+        password = request.form['password']
+        verify = request.form['verify']
+        email = request.form['email']
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        phone = request.form['phone']
+        facebook = request.form['facebook']
+        branch = request.form['branch']
+        base = request.form['base']
+        linkedin = request.form['linkedin'] 
+        entrydate = request.form['entrydate']        
+        exitdate = request.form['exitdate']     
+        userimage = request.form['userimage']
+
+
+    user = User.query.filter_by(owner=owner).all()
+    info = Info.query.filter_by(owner=owner).all()
+    return render_template('profile.html',title="Profile", 
+        user=user, info=info)
 
 if __name__ == '__main__':
     app.run()
