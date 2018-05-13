@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <a href='/profile'>View Profile</a>
 
     <h3>In this section you can view those with whom you may have been stationed with in the past.</h3>
     <h3>In order to share contact info with one another you must click on the "Yes" button next to their name!</h3>
@@ -12,55 +11,47 @@
 
                 then show User.Name, User.Image, MilInfo.Base
 
-            Make buttons for selecting users to connect with.
+            Make buttons for selecting users to connect with.-->
 
 
         <hr />
 
-        {% if blogs|length == 0 %}
+        {% if matches|length == 0 %}
         <p>No Matches Yet</p>
         {% else %}
 
             <ul>
-                {% for blog in blogs %}
+                {% for match in matches %}
                 <li>
-                    <a href="/blogs?id={{blog.id}}">{{blog.name}}</a>
-                    <h6><p>Written By: 
-                        <br> 
-                        <a href="/blog?id={{blog.owner.id}}"></a>{{blog.owner.username}}</p></h6>
+                    {{info.owner.firstname}}, {{info.owner.lastname}}, {{info.owner.userimage}} {{info.owner.base}}
                 </li>
                 {% endfor %}
 
         {% endif %}
 
     <hr />
+
+<!--//TODO - If user.id.a and user.id.b both click yes button then show contact info here-->
+
 <h3>**************************************************************************************************</h3>
-
-//TODO - If user.id.a and user.id.b both click yes button then show contact info here
-            user.name, user.email, user.phone, user.facebook, user.linkedin, user.image, MilInfo.Base
-
-
 <h4>In this section you can view those with whom you have mutually clicked "Yes"!</h4>
 
 
 <hr />
 <h1>Your Connections</h1>
 
-        {% if blogs|length == 0 %}
+        {% if friends|length == 0 %}
         <p>No Connections Yet</p>
         {% else %}
 
             <ul>
-                {% for blog in blogs %}
+                {% for friend in friends %}
                 <li>
-                    <a href="/blogs?id={{blog.id}}">{{blog.name}}</a>
-                    <h6><p>Written By: 
-                        <br> 
-                        <a href="/blog?id={{blog.owner.id}}"></a>{{blog.owner.username}}</p></h6>
+                    {{info.owner.firstname}}, {{info.owner.lastname}} {{info.owner.userimage}}, {{info.owner.email}}, {{info.owner.linkedin}}, {{info.owner.facebook}}, {{info.owner.phone}}
                 </li>
                 {% endfor %}
 
         {% endif %}
 
-    <hr />-->
+    <hr />
 {% endblock %}

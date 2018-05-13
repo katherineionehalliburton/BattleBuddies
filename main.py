@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:beproductive@localhost:8889/blogz'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://battlebuddies:battlebuddies@localhost:8889/battlebuddies'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 app.secret_key = '7h1sh@sb33n7h3h@rd3s7p@r7'
@@ -67,6 +67,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
             session['username'] = username
+            ### - todo - run database query to check for new matches here
             flash("Logged in")
             return redirect('/matches')
         else:
@@ -108,7 +109,7 @@ def register():
                 db.session.add(new_user)
                 db.session.commit()
                 session['username'] = username
-                return redirect('/profile')
+                return render_template('profile.html')
                 
         return redirect('/register')
 
@@ -121,18 +122,9 @@ def logout():
 
 @app.route('/matches')
 def matches():   
-    '''infoid = request.args.get('id')
-    ownerid = request.args.get('owner_id')
-    if ownerid:
-        matches = Info.query.filter_by(ownerid=ownerid).all()
-        return render_template('matches.html', title="Matches", matches=matches)
-    if infoid:
-        infoid = int(infoid)
-        matches = Info.query.get(infoid)
-        return render_template('matches.html', matches=matches)
-    matches = Info.query.all()'''
+    
     return render_template('matches.html',title="Matches", 
-        matches=matches)
+        info=info)
 
 
 @app.route('/profile', methods=['POST', 'GET'])
@@ -203,10 +195,10 @@ def profile():
             info = Info(firstname,lastname,email,phone,facebook,linkedin,userimage,branch,base,entrydate,exitdate,owner)
             db.session.add(info)
             db.session.commit()
-            return redirect('/matches?id={0}'.format(info.id))
+            return render_template('matches.html',title="Your Matches")
 
     info = Info.query.filter_by(owner=owner).all()
-    return render_template('profile.html',title="Profile", 
+    return render_template('matches.html',title="Your Matches", 
         info=info)
 
 if __name__ == '__main__':
