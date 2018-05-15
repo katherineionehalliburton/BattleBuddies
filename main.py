@@ -24,7 +24,9 @@ class User(db.Model):
     entrydate = db.Column(db.Integer)
     exitdate = db.Column(db.Integer) 
     password = db.Column(db.String(100))
-    username = db.Column(db.String(100), unique=True)     
+    username = db.Column(db.String(100), unique=True)    
+    matches = db.relationship('Matches', backref='owner')
+    friends = db.relationship('Friends', backref='owner')
 
 
     def __init__(self, password, username, firstname, lastname, email, phone, facebook, linkedin, userimage, branch, base, entrydate, exitdate):
@@ -40,12 +42,36 @@ class User(db.Model):
         self.branch = branch
         self.base = base
         self.entrydate = entrydate   
-        self.exitdate = exitdate        
+        self.exitdate = exitdate    
+
+
+class Matches(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    matches = db.Column(db.Integer)
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+    def __init__(self, matches, owner):
+        self.matches = matches
+        self.owner = owner
+
+
+
+class Friends(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    friends = db.Column(db.Integer)
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __init__(self, friends, owner):
+        self.friends = friends
+        self.owner = owner
+
 
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'register', 'index', 'matches']
+    allowed_routes = ['login', 'register', 'matches', 'friends']
     if request.endpoint not in allowed_routes and 'username' not in session:
         flash("You must log in!")
         return redirect('/login')
@@ -59,7 +85,7 @@ def login():
         if user and user.password == password:
             session['username'] = username
             flash("Logged in")
-            return redirect('/matches')
+            return render_template('matches.html')
         else:
             flash('User/password incorrect or user does not exist', 'error')
 
@@ -169,12 +195,17 @@ def logout():
     del session['username']
     return redirect('/login')
 
-@app.route('/matches')
+@app.route('/matches', methods=['POST', 'GET'])
 def matches():   
-    usermatchbranches = User.query.with_entities(User.branch, db.func.count()).group_by(User.branch).having(db.func.count() > 1).all()
-    usermatchbases = User.query.with_entities(User.base, db.func.count()).group_by(User.base).having(db.func.count() > 1).all()
+    usermatchbranches = User.query.with_entities(User.Branch, db.func.count()).group_by(User.Branch).having(db.func.count() > 1).all()
+    usermatchbases = User.query.with_entities(User.Base, db.func.count()).group_by(User.Base).having(db.func.count() > 1).all()
     
-    print (usermatchbranches)
+    print (usermatchbases)
+
+
+@app.route('/friends', methods=['POST', 'GET'])
+def friends():
+    return render_template('friends.html')
 
 
 if __name__ == '__main__':

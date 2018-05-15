@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h3>In this section you can view contact info for those with whom you may have been stationed with in the past.</h3>
+    <h3>If you want to see someones contact info here, you must click on the "Yes" button next to their name on the <a href="/matches"> Matches </a>page!</h3>
+
+<!--//TODO - If user.id.a and user.id.b both click yes button then show contact info here-->
+
+<h3>**************************************************************************************************</h3>
+<hr />
+<h1>Your Friends</h1>
+
+        {% if friends|length == 0 %}
+        <p>No Friends Yet - encourage those you already know to sign up and ask them to spread the word!</p>
+        {% else %}
+
+            <ul>
+                {% for user in friends %}
+                <li>
+                    {{user.firstname}}, {{user.lastname}} {{user.userimage}}, {{user.email}}, {{user.linkedin}}, {{user.facebook}}, {{user.phone}}
+                </li>
+                {% endfor %}
+
+        {% endif %}
+
+    <hr />
+{% endblock %}

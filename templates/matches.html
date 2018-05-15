@@ -4,26 +4,25 @@
 
     <h3>In this section you can view those with whom you may have been stationed with in the past.</h3>
     <h3>In order to share contact info with one another you must click on the "Yes" button next to their name!</h3>
+    <h3>Click <a href="/friends">HERE</a> to view your current friends list.</h3>
     <h1>Your Matches</h1>
     <!--
         //TODO - if MilInfo.Branch.A == MilInfo.Branch.B and MilInfo.Base.A == MilInfo.Base.B 
                     and MilInfo.entrydate/exitdate.A range contains MilInfo.entrydate/exitdate>B range
 
-                then show User.Name, User.Image, MilInfo.Base
-
-            Make buttons for selecting users to connect with.-->
-
+                then show User.Name, User.Image, MilInfo.Base-->
 
         <hr />
 
-        {% if matches|length == 0 %}
+        {% if usermatchbases|length == 0 %}
         <p>No Matches Yet</p>
         {% else %}
 
             <ul>
-                {% for match in matches %}
+                {% for user in userrmatchbases %}
+                <form action="/friends"><input type:"submit" name="yes" value="submit">YES</input></form>
                 <li>
-                    {{info.owner.firstname}}, {{info.owner.lastname}}, {{info.owner.userimage}} {{info.owner.base}}
+                    {{user.firstname}}, {{user.lastname}}, {{user.userimage}} {{user.base}}
                 </li>
                 {% endfor %}
 
@@ -31,27 +30,4 @@
 
     <hr />
 
-<!--//TODO - If user.id.a and user.id.b both click yes button then show contact info here-->
-
-<h3>**************************************************************************************************</h3>
-<h4>In this section you can view those with whom you have mutually clicked "Yes"!</h4>
-
-
-<hr />
-<h1>Your Connections</h1>
-
-        {% if friends|length == 0 %}
-        <p>No Connections Yet</p>
-        {% else %}
-
-            <ul>
-                {% for friend in friends %}
-                <li>
-                    {{info.owner.firstname}}, {{info.owner.lastname}} {{info.owner.userimage}}, {{info.owner.email}}, {{info.owner.linkedin}}, {{info.owner.facebook}}, {{info.owner.phone}}
-                </li>
-                {% endfor %}
-
-        {% endif %}
-
-    <hr />
 {% endblock %}
