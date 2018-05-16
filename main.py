@@ -25,7 +25,6 @@ class User(db.Model):
     exitdate = db.Column(db.Integer) 
     password = db.Column(db.String(100))
     username = db.Column(db.String(100), unique=True)    
-    matches = db.relationship('Matches', backref='owner')
     friends = db.relationship('Friends', backref='owner')
 
 
@@ -43,19 +42,6 @@ class User(db.Model):
         self.base = base
         self.entrydate = entrydate   
         self.exitdate = exitdate    
-
-
-class Matches(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-    matches = db.Column(db.Integer)
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-
-    def __init__(self, matches, owner):
-        self.matches = matches
-        self.owner = owner
-
 
 
 class Friends(db.Model):
@@ -85,7 +71,7 @@ def login():
         if user and user.password == password:
             session['username'] = username
             flash("Logged in")
-            return render_template('matches.html')
+            return redirect('/matches')
         else:
             flash('User/password incorrect or user does not exist', 'error')
 
@@ -126,58 +112,34 @@ def register():
         existing_user = User.query.filter_by(username=username).first()
         
         if existing_user:            
-            flash("User already exists")
+            flash("User already exists", 'error')
         if not existing_user:
-            if len(username) < 6 or len(username) > 20 or " " in username or username == "":
+            if len(username) < 6 or len(username) > 12 or " " in username or username == "":
                 error = True
-                flash("Your entry must be between 6 and 20 characters and contain no spaces. Required field.")
-            if len(password) < 6 or len(password) > 20 or " " in password or password == "":
+                flash("Your Username must be between 6 and 12 characters and contain no spaces. Required field.", 'error')
+            if len(password) < 8 or len(password) > 15 or " " in password or password == "":
                 error = True
-                flash("Your entry must be between 6 and 20 characters and contain no spaces. Required field.")
-            if len(verify) < 6 or len(verify) > 20 or " " in verify or verify == "":
-                error = True
-                flash("Your entry must be between 6 and 20 characters and contain no spaces. Required field.")
+                flash("Your Password must be between 8 and 15 characters and contain no spaces. Required field.", 'error')
 
             if password != verify:
                 error = True
-                flash("Password and Verify Password fields must match.")
+                flash("Password and Verify Password fields must match.", 'error')
 
             if not email and not phone:
-                flash("Profile must have an email or phone for contact!", 'error')
+                flash("Profile must have an email OR phone for contact. WE WILL NEVER SELL YOUR INFORMATION! We will only ever contact you by email, and only at your request!", 'error')
                 error = True
 
-            if not firstname:
-                flash("First name required!", 'error')
+            if " " in email:
                 error = True
-            if not lastname:
-                flash("Last name required!", 'error')
-                error = True
-            if not branch:
-                flash("Branch required!", 'error')
-                error = True
-            if not base:
-                flash("Base Assignment required!", 'error')
-                error = True
-            if not entrydate:
-                flash("Enlistment Date required!", 'error')
-                error = True
-            if not exitdate:
-                flash("Exit Date required!", 'error')
-                error = True
-            if not userimage:
-                flash("Service Image required!", 'error')
-                error = True
-            if " " in email or email == "":
-                error = True
-                flash("Your entry should contain no spaces. Required field.")
-        
-            if "." not in email: 
-                error = True
-                flash("Not a valid email. Must contain a ''.'' ")
+                flash("Your Email should contain no spaces. Required field.", 'error')
                 
-            if "@" not in email:
+            if "@" not in email or "." not in email:
                 error = True
-                flash("Not a valid email. Must contain a '@' ")
+                flash("Not a valid email. Must contain a '@' ", 'error')
+
+            if not firstname or not lastname or not branch or not base or not entrydate or not exitdate:
+                flash("All fields with an '*' are required!", 'error')
+                error = True            
             
             if not error:
                 new_user = User(password,username,firstname,lastname,email,phone,facebook,linkedin,userimage,branch,base,entrydate,exitdate)
@@ -197,11 +159,11 @@ def logout():
 
 @app.route('/matches', methods=['POST', 'GET'])
 def matches():   
-    usermatchbranches = User.query.with_entities(User.Branch, db.func.count()).group_by(User.Branch).having(db.func.count() > 1).all()
-    usermatchbases = User.query.with_entities(User.Base, db.func.count()).group_by(User.Base).having(db.func.count() > 1).all()
-    
-    print (usermatchbases)
-
+    if request.method == 'GET':
+        usermatchbases = User.query.with_entities(User.base, db.func.count()).group_by(User.base).having(db.func.count() > 1).all()
+        return render_template('matches.html', title='Matches', usermatchbases=usermatchbases)
+    return render_template('matches.html')
+        
 
 @app.route('/friends', methods=['POST', 'GET'])
 def friends():

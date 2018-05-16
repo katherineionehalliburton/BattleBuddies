@@ -6,23 +6,17 @@
     <h3>In order to share contact info with one another you must click on the "Yes" button next to their name!</h3>
     <h3>Click <a href="/friends">HERE</a> to view your current friends list.</h3>
     <h1>Your Matches</h1>
-    <!--
-        //TODO - if MilInfo.Branch.A == MilInfo.Branch.B and MilInfo.Base.A == MilInfo.Base.B 
-                    and MilInfo.entrydate/exitdate.A range contains MilInfo.entrydate/exitdate>B range
-
-                then show User.Name, User.Image, MilInfo.Base-->
 
         <hr />
 
-        {% if usermatchbases|length == 0 %}
+        {% if not usermatchbases %}
         <p>No Matches Yet</p>
         {% else %}
 
             <ul>
                 {% for user in userrmatchbases %}
-                <form action="/friends"><input type:"submit" name="yes" value="submit">YES</input></form>
                 <li>
-                    {{user.firstname}}, {{user.lastname}}, {{user.userimage}} {{user.base}}
+                   <p>{{user.firstname}}, {{user.lastname}}, {{user.userimage}}, {{user.base}}</p>
                 </li>
                 {% endfor %}
 
