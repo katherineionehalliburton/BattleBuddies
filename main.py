@@ -57,7 +57,7 @@ class Friends(db.Model):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'register', 'matches', 'friends']
+    allowed_routes = ['login', 'register', 'friends']
     if request.endpoint not in allowed_routes and 'username' not in session:
         flash("You must log in!")
         return redirect('/login')
@@ -159,10 +159,20 @@ def logout():
 
 @app.route('/matches', methods=['POST', 'GET'])
 def matches():   
-    if request.method == 'GET':
-        usermatchbases = User.query.with_entities(User.base, db.func.count()).group_by(User.base).having(db.func.count() > 1).all()
-        return render_template('matches.html', title='Matches', usermatchbases=usermatchbases)
-    return render_template('matches.html')
+    user_id = request.args.get('id')
+    if user_id:
+        user_id = int(user_id)
+        users = User.query.get(user_id)
+        users = User.query.filter_by(user_id=user_id).all()
+        return render_template('matches.html', title="Matches", users=users)
+    users = User.query.all()
+    return render_template('matches.html',title="Matches", 
+        users=users)
+    
+'''
+    usermatchbases = User.query.with_entities(User.base, db.func.count()).group_by(User.base).having(db.func.count() > 1).all()
+        if usermatchbases:
+            return render_template('matches.html', title='Matches', usermatchbases=usermatchbases)'''
         
 
 @app.route('/friends', methods=['POST', 'GET'])
