@@ -16,7 +16,11 @@
             <ul>
                 {% for user in users %}
                 <li>
-                    <p><a href="/users?id={{user.id}}"></a>{{user.firstname}}, {{user.lastname}}, {{user.userimage}}, {{user.base}}</p>
+                    
+                    <form action="/users?id={{user.id}}">
+                        <input type="submit" value="Yes">
+                        {{user.lastname}}, {{user.firstname}}, {{user.userimage}}, {{user.base}}
+                    </form>
                 </li>
                 {% endfor %}
 
