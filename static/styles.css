@@ -1,16 +1,24 @@
 *
 {
-    text-align: center;
+    text-align: left;
     text-decoration: none;
     margin: auto;
 }
 
-body
-{
-    background-color:darkolivegreen;
-}
+body {
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+  }
+  
+#canvas {
+    position: absolute;
+    margin: 0px;
+    padding: 0px;
+    background-color: #D5D18A;
+  }
 
-ul li a
+ol li a
 {
     border: 3px solid gray;
     border-radius: 5px;

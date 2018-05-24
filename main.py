@@ -1,12 +1,30 @@
-from flask import Flask, request, redirect, render_template, session, flash
+from flask import Flask, request, redirect, render_template, session, flash, send_from_directory
+import os
 from flask_sqlalchemy import SQLAlchemy
+from flask_uploads import UploadSet, IMAGES
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import CombinedMultiDict
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://battlebuddies:battlebuddies@localhost:8889/battlebuddies'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 app.secret_key = '7h1sh@sb33n7h3h@rd3s7p@r7'
+
+images = UploadSet('images', IMAGES)
+
+class UploadForm(FlaskForm):
+    upload = FileField('image', validators=[
+        FileRequired(),
+        FileAllowed(images, 'Images only!')
+    ])
+
+
+class PhotoForm(FlaskForm):
+    photo = FileField(validators=[FileRequired()])
         
 
 class User(db.Model):
@@ -25,7 +43,7 @@ class User(db.Model):
     exitdate = db.Column(db.Integer) 
     password = db.Column(db.String(100))
     username = db.Column(db.String(100), unique=True)    
-    friends = db.relationship('Friends', backref='owner')
+    all_friends = db.relationship('Friends', backref='owner')
 
 
     def __init__(self, password, username, firstname, lastname, email, phone, facebook, linkedin, userimage, branch, base, entrydate, exitdate):
@@ -46,13 +64,16 @@ class User(db.Model):
 
 class Friends(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    friends = db.Column(db.Integer)
+    new_friend = db.Column(db.Integer)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, friends, owner):
-        self.friends = friends
+    def __init__(self, new_friend, owner):
+        self.new_friend = new_friend
         self.owner = owner
 
+@app.route('/js/<path:path>')
+def send_js(path):
+    return send_from_directory('js', path)
 
 
 @app.before_request
@@ -108,7 +129,9 @@ def register():
         entrydate = request.form['entrydate']        
         exitdate = request.form['exitdate']     
         userimage = request.form['userimage']
-                
+
+        form = PhotoForm(CombinedMultiDict((request.files, request.form)))        
+
         existing_user = User.query.filter_by(username=username).first()
         
         if existing_user:            
@@ -139,7 +162,14 @@ def register():
 
             if not firstname or not lastname or not branch or not base or not entrydate or not exitdate:
                 flash("All fields with an '*' are required!", 'error')
-                error = True            
+                error = True  
+            
+            if form.validate_on_submit():
+                f = form.photo.data
+                filename = secure_filename(f.filename)
+                f.save(os.path.join(
+                    app.instance_path, 'photos', filename
+                ))          
             
             if not error:
                 new_user = User(password,username,firstname,lastname,email,phone,facebook,linkedin,userimage,branch,base,entrydate,exitdate)
@@ -170,14 +200,44 @@ def matches():
         users=users)
     
 '''
+# something like this will be used to filter out the current user so they are not shown as one of their own matches
+    current_user_id = User.query.filter_by(session['username']).first()
+
+        if session['username'] = 'username' and user_id == current_user_id:
+            break
+        else:
+            continue
+
+    # Something like this will be used to match users by Base instead of displaying ALL users:
+
     usermatchbases = User.query.with_entities(User.base, db.func.count()).group_by(User.base).having(db.func.count() > 1).all()
         if usermatchbases:
             return render_template('matches.html', title='Matches', usermatchbases=usermatchbases)'''
         
 
+
+
 @app.route('/friends', methods=['POST', 'GET'])
+
+    #def new_friend():
+        #owner = User.query.filter_by(email=session['email']).first()
+        #new_friend = 
+        #if new_friend:
+            #friends = Friends(friends,owner)
+            #db.session.add(friends)
+            #db.session.commit()
+            #return redirect('/friends?id={0}'.format(friend.id))
+
 def friends():
-    return render_template('friends.html')
+    # Something like /matches code
+    user_id = request.args.get('id')
+    if user_id:
+        user_id = int(user_id)
+        users = User.query.get(user_id)
+        users = User.query.filter_by(user_id=user_id).all()
+        return render_template('matches.html', title="Matches", users=users)
+    users = User.query.all()
+    return render_template('friends.html',title="Friends", users=users)
 
 
 if __name__ == '__main__':

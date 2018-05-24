@@ -11,17 +11,20 @@
 <hr />
 <h1>Your Friends</h1>
 
-        {% if friends|length == 0 %}
+        {% if users|length == 0 %}
         <p>No Friends Yet - encourage those you already know to sign up and ask them to spread the word!</p>
         {% else %}
 
-            <ul>
-                {% for user in friends %}
+            <ol>
+                {% for user in users %}
                 <li>
-                    {{user.firstname}}, {{user.lastname}} {{user.userimage}}, {{user.email}}, {{user.linkedin}}, {{user.facebook}}, {{user.phone}}
+                    <form action="/users?id={{user.id}}">
+                        {{user.userimage}}, {{user.firstname}} {{user.lastname}}, 
+                        {{user.email}}, {{user.linkedin}}, {{user.facebook}}, {{user.phone}}
+                    </form>
                 </li>
                 {% endfor %}
-
+            </ol>
         {% endif %}
 
     <hr />

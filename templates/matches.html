@@ -12,19 +12,21 @@
         {% if users|length == 0 %}
         <p>No Matches Yet</p>
         {% else %}
-
-            <ul>
+        <div>
+            <ol>
                 {% for user in users %}
-                <li>
-                    
+                <li>                    
                     <form action="/users?id={{user.id}}">
                         <input type="submit" value="Yes">
-                        {{user.lastname}}, {{user.firstname}}, {{user.userimage}}, {{user.base}}
+                        <img src="/images/{{user.userimage}}">{{user.firstname}} {{user.lastname}}, {{user.branch}}, {{user.base}}
                     </form>
                 </li>
                 {% endfor %}
-
+            </ol> 
+        </div>   
         {% endif %}
+        <br>
+        <br>
 
     <hr />
 
