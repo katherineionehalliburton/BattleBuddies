@@ -1,22 +1,10 @@
 *
 {
-    text-align: left;
+    background-image: url("../../background.jpg");
+    text-align: center;
     text-decoration: none;
     margin: auto;
 }
-
-body {
-    margin: 0px;
-    padding: 0px;
-    overflow: hidden;
-  }
-  
-#canvas {
-    position: absolute;
-    margin: 0px;
-    padding: 0px;
-    background-color: #D5D18A;
-  }
 
 ol li a
 {
