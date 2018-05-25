@@ -15,10 +15,10 @@
         <div>
             <ol>
                 {% for user in users %}
-                <li>                    
+                <li: only-of-type {list-style-type: none;}>                    
                     <form action="/users?id={{user.id}}">
                         <input type="submit" value="Yes">
-                        <img src="/images/{{user.userimage}}">{{user.firstname}} {{user.lastname}}, {{user.branch}}, {{user.base}}
+                        <img src="../images/{{user.userimage}}">{{user.firstname}} {{user.lastname}}, {{user.branch}}, {{user.base}}
                     </form>
                 </li>
                 {% endfor %}

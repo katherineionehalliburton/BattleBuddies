@@ -17,7 +17,7 @@
 
             <ol>
                 {% for user in users %}
-                <li>
+                <li: only-of-type {list-style-type: none;}>
                     <form action="/users?id={{user.id}}">
                         {{user.userimage}}, {{user.firstname}} {{user.lastname}}, 
                         {{user.email}}, {{user.linkedin}}, {{user.facebook}}, {{user.phone}}

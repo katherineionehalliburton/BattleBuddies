@@ -14,3 +14,9 @@ ol li a
     background-color: rgb(41, 29, 216);
     color:#ffffff
 }
+
+div img
+{
+    width: 150px;
+    height: 150px;
+}
