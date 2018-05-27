@@ -1,9 +1,13 @@
 *
 {
-    background-image: url("../../background.jpg");
     text-align: center;
     text-decoration: none;
     margin: auto;
+}
+
+body
+{
+    background-color: darkolivegreen;
 }
 
 ol li a
