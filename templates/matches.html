@@ -18,7 +18,8 @@
                 <li: only-of-type {list-style-type: none;}>                    
                     <form action="/users?id={{user.id}}">
                         <input type="submit" value="Yes">
-                        <img src="../images/{{user.userimage}}">{{user.firstname}} {{user.lastname}}, {{user.branch}}, {{user.base}}
+                        <img src="../../images/{{user.userimage}}"> {{user.rank}} {{user.firstname}} 
+                        {{user.lastname}}, {{user.branch}}, {{user.base}}, {{user.entrydate}}-{{user.exitdate}}
                     </form>
                 </li>
                 {% endfor %}

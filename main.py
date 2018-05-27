@@ -30,6 +30,7 @@ class PhotoForm(FlaskForm):
 class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
+    rank = db.Column(db.String(100))
     firstname = db.Column(db.String(100))
     lastname = db.Column(db.String(100))
     email = db.Column(db.String(100))
@@ -46,9 +47,10 @@ class User(db.Model):
     all_friends = db.relationship('Friends', backref='owner')
 
 
-    def __init__(self, password, username, firstname, lastname, email, phone, facebook, linkedin, userimage, branch, base, entrydate, exitdate):
+    def __init__(self, password, username, rank, firstname, lastname, email, phone, facebook, linkedin, userimage, branch, base, entrydate, exitdate):
         self.username = username
         self.password = password
+        self.rank = rank
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
@@ -104,6 +106,7 @@ def register():
     error = False
     username = ''
     email = ""
+    rank = ""
     firstname = ""
     lastname = ""
     phone = ""
@@ -119,6 +122,7 @@ def register():
         password = request.form['password']
         verify = request.form['verify']
         email = request.form['email']
+        rank = request.form["rank"]
         firstname = request.form['firstname']
         lastname = request.form['lastname']
         phone = request.form['phone']
@@ -160,7 +164,7 @@ def register():
                 error = True
                 flash("Not a valid email. Must contain a '@' ", 'error')
 
-            if not firstname or not lastname or not branch or not base or not entrydate or not exitdate:
+            if not rank or not firstname or not lastname or not branch or not base or not entrydate or not exitdate:
                 flash("All fields with an '*' are required!", 'error')
                 error = True  
             
@@ -172,7 +176,7 @@ def register():
                 ))          
             
             if not error:
-                new_user = User(password,username,firstname,lastname,email,phone,facebook,linkedin,userimage,branch,base,entrydate,exitdate)
+                new_user = User(password,username,rank,firstname,lastname,email,phone,facebook,linkedin,userimage,branch,base,entrydate,exitdate)
                 db.session.add(new_user)
                 db.session.commit()
                 session['username'] = username
