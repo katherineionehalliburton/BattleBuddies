@@ -14,10 +14,10 @@
         {% else %}
         <div>
             <ol>
-                {% for user in users %}
-                    <li: only-of-type {list-style-type: none;}>                    
+                {% for user in users|rejectattr(current_user) %}
+                    <li: only-of-type {list-style-type: none;}>  
+                        <form action="/friends" method="GET"><button type="submit" value="Yes">Yes</button></form>                  
                         <form action="/users?id={{user.id}}">
-                            <input type="submit" value="Yes">
                             <img src="../../images/{{user.userimage}}"> {{user.rank}} {{user.firstname}} 
                             {{user.lastname}}, {{user.branch}}, {{user.base}}, {{user.entrydate}}-{{user.exitdate}}
                         </form>
