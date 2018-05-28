@@ -24,7 +24,7 @@
 </form>
 <button id="myBtn">Create Acount</button>
 <body>
-
+    <form action="/register" method="POST">
         <!-- The Modal -->
         <div id="myModal" class="modal">
         
@@ -34,7 +34,7 @@
                 <span class="close">&times;</span>
                 <h2>Create Account</h2>
             </div>
-            <div class="modal-body">
+            <div class="modal-body">    
                 <table>
                     <h3>Login Information</h3>
                     <tr>
@@ -140,9 +140,8 @@
                 </table>    
             </div>
             <div class="modal-footer">
-               <form action="/matches" method="POST">
-                  <input type="submit" value="Register">
-                </form>
+                <input type="submit" value="Register">
+    </form>
             </div>
             </div>
         
