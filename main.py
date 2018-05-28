@@ -34,7 +34,7 @@ class User(db.Model):
     firstname = db.Column(db.String(100))
     lastname = db.Column(db.String(100))
     email = db.Column(db.String(100))
-    phone = db.Column(db.Integer)
+    phone = db.Column(db.String(10))
     facebook = db.Column(db.String(100))
     linkedin = db.Column(db.String(100))
     userimage = db.Column(db.String(100))
@@ -80,7 +80,7 @@ def send_js(path):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'register', 'matches', 'friends']
+    allowed_routes = ['login', 'register',]
     if request.endpoint not in allowed_routes and 'username' not in session:
         flash("You must log in!")
         return redirect('/login')
@@ -183,7 +183,7 @@ def register():
                 db.session.add(new_user)
                 db.session.commit()
                 session['username'] = username
-                return render_template('matches.html')
+                return redirect('/matches')
                 
         return redirect('/matches')
 
