@@ -80,7 +80,7 @@ def send_js(path):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'register']
+    allowed_routes = ['login', 'register', 'matches', 'friends']
     if request.endpoint not in allowed_routes and 'username' not in session:
         flash("You must log in!")
         return redirect('/login')
@@ -185,9 +185,9 @@ def register():
                 session['username'] = username
                 return render_template('matches.html')
                 
-        return redirect('/login')
+        return redirect('/matches')
 
-    return render_template('login.html')
+    return render_template('matches.html')
 
 @app.route('/logout')
 def logout():
@@ -197,11 +197,10 @@ def logout():
 @app.route('/matches', methods=['POST', 'GET'])
 def matches():   
     user_id = request.args.get('id')
-    current_user = session['username']
     if user_id:
         user_id = int(user_id)
         users = User.query.get(user_id)
-        users = User.query.filter(user_id!=current_user).all()
+        users = User.query.filter_by(user_id=user_id).all()
         return render_template('matches.html', title="Matches", users=users)
     users = User.query.all()
     return render_template('matches.html',title="Matches", 
