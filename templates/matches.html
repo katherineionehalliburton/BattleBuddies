@@ -15,13 +15,13 @@
         <div>
             <ol>
                 {% for user in users %}
-                <li: only-of-type {list-style-type: none;}>                    
-                    <form action="/users?id={{user.id}}">
-                        <input type="submit" value="Yes">
-                        <img src="../../images/{{user.userimage}}"> {{user.rank}} {{user.firstname}} 
-                        {{user.lastname}}, {{user.branch}}, {{user.base}}, {{user.entrydate}}-{{user.exitdate}}
-                    </form>
-                </li>
+                    <li: only-of-type {list-style-type: none;}>                    
+                        <form action="/users?id={{user.id}}">
+                            <input type="submit" value="Yes">
+                            <img src="../../images/{{user.userimage}}"> {{user.rank}} {{user.firstname}} 
+                            {{user.lastname}}, {{user.branch}}, {{user.base}}, {{user.entrydate}}-{{user.exitdate}}
+                        </form>
+                    </li>
                 {% endfor %}
             </ol> 
         </div>   

@@ -167,6 +167,9 @@ def register():
             if not rank or not firstname or not lastname or not branch or not base or not entrydate or not exitdate:
                 flash("All fields with an '*' are required!", 'error')
                 error = True  
+
+            if userimage == "":
+                userimage = "static/images/subphoto.jpg"
             
             if form.validate_on_submit():
                 f = form.photo.data
@@ -194,24 +197,17 @@ def logout():
 @app.route('/matches', methods=['POST', 'GET'])
 def matches():   
     user_id = request.args.get('id')
+    current_user = session['username']
     if user_id:
         user_id = int(user_id)
         users = User.query.get(user_id)
-        users = User.query.filter_by(user_id=user_id).all()
+        users = User.query.filter(user_id!=current_user).all()
         return render_template('matches.html', title="Matches", users=users)
     users = User.query.all()
     return render_template('matches.html',title="Matches", 
         users=users)
     
 '''
-# something like this will be used to filter out the current user so they are not shown as one of their own matches
-    current_user_id = User.query.filter_by(session['username']).first()
-
-        if session['username'] = 'username' and user_id == current_user_id:
-            break
-        else:
-            continue
-
     # Something like this will be used to match users by Base instead of displaying ALL users:
 
     usermatchbases = User.query.with_entities(User.base, db.func.count()).group_by(User.base).having(db.func.count() > 1).all()
