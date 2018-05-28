@@ -80,7 +80,7 @@ def send_js(path):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'register', 'friends']
+    allowed_routes = ['login', 'register']
     if request.endpoint not in allowed_routes and 'username' not in session:
         flash("You must log in!")
         return redirect('/login')
@@ -104,7 +104,7 @@ def login():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     error = False
-    username = ''
+    username = ""
     email = ""
     rank = ""
     firstname = ""
@@ -185,9 +185,9 @@ def register():
                 session['username'] = username
                 return render_template('matches.html')
                 
-        return redirect('/register')
+        return redirect('/login')
 
-    return render_template('register.html')
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():

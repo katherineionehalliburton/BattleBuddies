@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <h1>Log in to Battle Buddies!</h1>
 <form action="/login" method="post">
     <table>
@@ -18,9 +21,163 @@
         </tr>
     </table>
     <input type="submit" value="Login">
-    <br> 
-    <button id="myBtn">Create Acount</button>
 </form>
+<button id="myBtn">Create Acount</button>
+<body>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+        
+            <!-- Modal content -->
+            <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2>Create Account</h2>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <h3>Login Information</h3>
+                    <tr>
+                        <td><label for="username">*Username</label></td>
+                        <td>
+                            <input name="username" type="username">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="password">*Password</label></td>
+                        <td>
+                            <input name="password" type="password">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="verify">*Verify Password</label></td>
+                        <td>
+                            <input name="verify" type="password">
+                        </td>
+                    </tr>
+                    
+                </table>
+                <table>
+                    <h3>Contact Information<h5>(This information will not be shown until both parties have agreed to connect
+                        <br> 
+                        if you do not enter a phone number you MUST provide an email).</h5></h3> 
+                    
+                    <tr>
+                        <td><label for="rank">*Rank</label></td>
+                        <td>
+                            <input name="rank" type="rank">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="firstname">*First Name</label></td>
+                        <td>
+                            <input name="firstname" type="firstname">
+                        </td>
+                    </tr>
+                    <tr>
+                            <td><label for="lastname">*Last Name</label></td>
+                            <td>
+                                <input name="lastname" type="lastname">
+                            </td>
+                    </tr>
+                    <tr>
+                            <td><label for="email">*Email</label></td>
+                            <td>
+                                <input name="email" type="email" value="{{ email }}">
+                            </td>
+                    </tr>
+                    <tr>
+                        <td><label for="phone">Phone</label></td>
+                        <td>
+                            <input name="phone" type="phone">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="linkedin"> LinkedIn</label></td>
+                        <td>
+                            <input name="linkedin" type="linkedin">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="facebook"> Facebook</label></td>
+                        <td>
+                            <input name="facebook" type="facebook">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="userimage"> Service Image</label></td>
+                        <td>
+                            <input name="userimage" type="file">
+                        </td>
+                    </tr>
+                </table>
+                <table>
+                    <h3>Service Information<h5>(This information will only be used to help find people you serve with.)</h5></h3>
+                        <tr>
+                        <td><label for="branch">Branch</label></td>
+                        <td>
+                            <input name="branch" type="branch">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="base">*Base Assignment(s)</label></td>
+                        <td>
+                            <input name="base" type="base">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="entrydate">*Enlistment Date</label></td>
+                        <td>
+                            <input name="entrydate" type="entrydate">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="exitdate">*Exit Date</label></td>
+                        <td>
+                            <input name="exitdate" type="exitdate">
+                        </td>
+                    </tr>   
+                </table>    
+            </div>
+            <div class="modal-footer">
+               <form action="/matches">
+                  <input type="submit" value="Register">
+                </form>
+            </div>
+            </div>
+        
+        </div>
+        
+        <script>
+        // Get the modal
+        var modal = document.getElementById('myModal');
+        
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+        
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        
+        // When the user clicks the button, open the modal 
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+        
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        </script>
+        
+        </body>
+        
 <div>
     <img src="../../images/01.jpg">
     <img src="../../images/02.jpg">
