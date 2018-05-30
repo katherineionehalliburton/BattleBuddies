@@ -10,7 +10,6 @@ body
     background-image: url('../../images/poppy.jpg');
     background-repeat: no-repeat;
     background-size: cover;
-    /*background-color: darkolivegreen;*/
 }
 
 ol li a
@@ -104,14 +103,17 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
 .modal-header {
     padding: 2px 16px;
-    background-color: #5cb85c;
+    background-color: #053505;
     color: white;
 }
 
-.modal-body {padding: 2px 16px;}
+.modal-body {
+    padding: 2px 16px;
+    background-color: gray;
+}
 
 .modal-footer {
     padding: 2px 16px;
-    background-color: #5cb85c;
+    background-color: #052c05;
     color: white;
 }

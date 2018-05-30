@@ -80,7 +80,7 @@ def send_js(path):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'register',]
+    allowed_routes = ['static', 'login', 'register',]
     if request.endpoint not in allowed_routes and 'username' not in session:
         flash("You must log in!")
         return redirect('/login')
