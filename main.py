@@ -80,7 +80,7 @@ def send_js(path):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['static', 'login', 'register', 'matches']
+    allowed_routes = ['static', 'login', 'register', 'matches', 'friends']
     if request.endpoint not in allowed_routes and 'username' not in session:
         flash("You must log in!")
         return redirect('/login')
@@ -169,7 +169,7 @@ def register():
                 error = True  
 
             if userimage == "":
-                userimage = "static/images/subphoto.jpg"
+                userimage = "subphoto.jpg"
             
             if form.validate_on_submit():
                 f = form.photo.data

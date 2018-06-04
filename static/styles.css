@@ -27,15 +27,10 @@ div img
     height: 300px;
 }
 
-li form img src
+div ol li form img
 {
     width: 150px;
     height: 150px;
-}
-
-form
-{
-    margin-left: -10px;
 }
 
 table
